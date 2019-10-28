@@ -9,7 +9,9 @@ const userController = {
 
   signIn: (req, res) => {
     req.flash('success_messages', '成功登入！');
-    res.redirect('/restaurants');
+    req.user.dataValues.isAdmin
+      ? res.redirect('/admin/restaurants')
+      : res.redirect('/restaurants');
   },
 
   signUpPage: (req, res) => {
