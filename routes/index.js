@@ -49,6 +49,7 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     adminController.editRestaurant
   );
+  app.get('/admin/users', authenticatedAdmin, adminController.getUsers);
   app.get('/signup', userController.signUpPage);
   app.get('/signin', userController.signInPage);
   app.get('/logout', userController.logout);
@@ -75,6 +76,7 @@ module.exports = (app, passport) => {
     upload.single('image'),
     adminController.putRestaurant
   );
+  app.put('/admin/users/:id', authenticatedAdmin, adminController.putUser);
 
   app.delete(
     '/admin/restaurants/:id',

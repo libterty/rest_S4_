@@ -1,11 +1,20 @@
 const fs = require('fs');
 const db = require('../models');
 const Restaurant = db.Restaurant;
+const User = db.User;
 
 const adminController = {
   getRestaurants: (req, res) => {
     return Restaurant.findAll().then(restaurants => {
       return res.render('admin/restaurants', { restaurants: restaurants });
+    });
+  },
+
+  getUsers: (req, res) => {
+    return User.findAll().then(users => {
+      let rule = '';
+      users.isAdmin ? (rule = 'Admin') : (rule = 'users');
+      return res.render('admin/users', { users, rule });
     });
   },
 
@@ -118,6 +127,16 @@ const adminController = {
           });
       });
     }
+  },
+
+  putUser: (req, res) => {
+    return User.findByPk(req.params.id).then(user => {
+      // return console.log(user);
+      user.update({ isAdmin: !user.dataValues.isAdmin }).then(() => {
+        req.flash('success_messages', 'user is up to update');
+        res.redirect('/admin/users');
+      });
+    });
   },
 
   deleteRestaurant: (req, res) => {

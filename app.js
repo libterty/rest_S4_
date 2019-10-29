@@ -5,6 +5,8 @@ const passport = require('./config/passport');
 const session = require('express-session');
 const flash = require('connect-flash');
 const methodOverride = require('method-override');
+const Handlebars = require('handlebars');
+const H = require('just-handlebars-helpers');
 const db = require('./models');
 const app = express();
 const port = 3000;
@@ -30,6 +32,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use(methodOverride('_method'));
+H.registerHelpers(Handlebars);
 
 app.listen(port, () => {
   db.sequelize.sync();
