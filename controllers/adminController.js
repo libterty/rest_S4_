@@ -8,6 +8,12 @@ const User = db.User;
 const Category = db.Category;
 
 const adminController = {
+  getUsers: (req, res) => {
+    return User.findAll().then(users => {
+      return res.render('admin/users', { users });
+    });
+  },
+
   getRestaurants: (req, res) => {
     return Restaurant.findAll({ include: [Category] }).then(restaurants => {
       console.log(restaurants);
@@ -15,14 +21,20 @@ const adminController = {
     });
   },
 
-  getUsers: (req, res) => {
-    return User.findAll().then(users => {
-      return res.render('admin/users', { users });
-    });
+  getRestaurant: (req, res) => {
+    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
+      restaurant => {
+        return res.render('admin/restaurant', {
+          restaurant
+        });
+      }
+    );
   },
 
   createRestaurant: (req, res) => {
-    return res.render('admin/create');
+    Category.findAll().then(categories => {
+      return res.render('admin/create', { categories });
+    });
   },
 
   postRestaurant: (req, res) => {
@@ -42,7 +54,8 @@ const adminController = {
           address: req.body.address,
           opening_hours: req.body.opening_hours,
           description: req.body.description,
-          image: file ? img.data.link : null
+          image: file ? img.data.link : null,
+          CategoryId: req.body.categoryId
         }).then(restaurant => {
           req.flash('success_messages', 'restaurant was successfully created');
           return res.redirect('/admin/restaurants');
@@ -54,7 +67,8 @@ const adminController = {
         tel: req.body.tel,
         address: req.body.address,
         opening_hours: req.body.opening_hours,
-        description: req.body.description
+        description: req.body.description,
+        CategoryId: req.body.categoryId
       }).then(restaurant => {
         req.flash('success_messages', 'restaurant was successfully created');
         res.redirect('/admin/restaurants');
@@ -62,19 +76,11 @@ const adminController = {
     }
   },
 
-  getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
-      restaurant => {
-        return res.render('admin/restaurant', {
-          restaurant: restaurant
-        });
-      }
-    );
-  },
-
   editRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id).then(restaurant => {
-      return res.render('admin/create', { restaurant });
+      Category.findAll().then(categories => {
+        return res.render('admin/create', { restaurant, categories });
+      });
     });
   },
 
@@ -96,7 +102,8 @@ const adminController = {
               address: req.body.address,
               opening_hours: req.body.opening_hours,
               description: req.body.description,
-              image: file ? img.data.link : restaurant.image
+              image: file ? img.data.link : restaurant.image,
+              CategoryId: req.body.categoryId
             })
             .then(restaurant => {
               req.flash(
@@ -115,7 +122,8 @@ const adminController = {
             tel: req.body.tel,
             address: req.body.address,
             opening_hours: req.body.opening_hours,
-            description: req.body.description
+            description: req.body.description,
+            CategoryId: req.body.categoryId
           })
           .then(restaurant => {
             req.flash(
