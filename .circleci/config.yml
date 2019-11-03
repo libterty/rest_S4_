@@ -29,5 +29,8 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      # run tests!
-      - run: npm run test
+      # run dev!
+      - run: npm run dev
+
+      # run test!
+      - run: npm run mocha
