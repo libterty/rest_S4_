@@ -1,22 +1,23 @@
+/* eslint-disable no-unused-vars */
 const fs = require('fs');
 const imgur = require('imgur-node-api');
 const IMGUR_CLIENT_ID = process.env.imgur_id;
 const db = require('../models');
 const Restaurant = db.Restaurant;
 const User = db.User;
+const Category = db.Category;
 
 const adminController = {
   getRestaurants: (req, res) => {
-    return Restaurant.findAll().then(restaurants => {
-      return res.render('admin/restaurants', { restaurants: restaurants });
+    return Restaurant.findAll({ include: [Category] }).then(restaurants => {
+      console.log(restaurants);
+      return res.render('admin/restaurants', { restaurants });
     });
   },
 
   getUsers: (req, res) => {
     return User.findAll().then(users => {
-      let rule = '';
-      users.isAdmin ? (rule = 'Admin') : (rule = 'users');
-      return res.render('admin/users', { users, rule });
+      return res.render('admin/users', { users });
     });
   },
 
@@ -62,16 +63,18 @@ const adminController = {
   },
 
   getRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id).then(restaurant => {
-      return res.render('admin/restaurant', {
-        restaurant: restaurant
-      });
-    });
+    return Restaurant.findByPk(req.params.id, { include: [Category] }).then(
+      restaurant => {
+        return res.render('admin/restaurant', {
+          restaurant: restaurant
+        });
+      }
+    );
   },
 
   editRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id).then(restaurant => {
-      return res.render('admin/create', { restaurant: restaurant });
+      return res.render('admin/create', { restaurant });
     });
   },
 
