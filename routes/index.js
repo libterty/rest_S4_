@@ -75,6 +75,11 @@ module.exports = (app, passport) => {
     upload.single('image'),
     adminController.postRestaurant
   );
+  app.post(
+    '/admin/categories',
+    authenticatedAdmin,
+    categoryController.postCategory
+  );
 
   app.put(
     '/admin/restaurants/:id',
