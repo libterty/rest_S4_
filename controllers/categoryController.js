@@ -23,7 +23,7 @@ let categoryController = {
     } else {
       return Category.create({
         name: req.body.name
-      }).then(category => {
+      }).then(() => {
         res.redirect('/admin/categories');
       });
     }
@@ -35,11 +35,19 @@ let categoryController = {
       return res.redirect('back');
     } else {
       return Category.findByPk(req.params.id).then(category => {
-        category.update(req.body).then(category => {
+        category.update(req.body).then(() => {
           res.redirect('/admin/categories');
         });
       });
     }
+  },
+
+  deleteCategory: (req, res) => {
+    return Category.findByPk(req.params.id).then(category => {
+      category.destroy().then(() => {
+        res.redirect('/admin/categories');
+      });
+    });
   }
 };
 module.exports = categoryController;
