@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node app.js",
         "dev": "nodemon app.js",
-        "test": "--maxWorkers=2 && codecov",
+        "test": "jest --maxWorkers=2 && codecov",
         "lint": "eslint --format table --fix .",
         "mocha": "mocha"
     },
