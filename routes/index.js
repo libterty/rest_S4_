@@ -3,6 +3,7 @@ const upload = multer({ dest: 'temp/' });
 const restController = require('../controllers/restController.js');
 const adminController = require('../controllers/adminController.js');
 const userController = require('../controllers/userController.js');
+const categoryController = require('../controllers/categoryController.js');
 
 module.exports = (app, passport) => {
   const authenticated = (req, res, next) => {
@@ -53,6 +54,11 @@ module.exports = (app, passport) => {
   app.get('/signup', userController.signUpPage);
   app.get('/signin', userController.signInPage);
   app.get('/logout', userController.logout);
+  app.get(
+    '/admin/categories',
+    authenticatedAdmin,
+    categoryController.getCategories
+  );
 
   app.post(
     '/signin',
