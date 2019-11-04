@@ -15,10 +15,10 @@
             </ul>
             <div>
             {{#if user.isAdmin}}
-                <a href="/admin" style="color: white;margin-right: 10px;">Admin 後台</a>
+                <a href="/admin" style="color: white;margin-right: 10px;">前往後台</a>
             {{/if}}
             {{#if user}}
-                <span style="color: white;margin-right: 10px;">Hi, {{user.email}}</span>
+                <span style="color: white;margin-right: 10px;">Hi, {{replace user.email}}</span>
                 <a href="/users/{{user.id}}" style="color: white;margin-right: 10px;">Profile</a>
                 <a href="/logout"><button class="btn btn-outline-success my-2 my-sm-0">LogOut</button></a>
             {{/if}}

@@ -110,4 +110,9 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     categoryController.deleteCategory
   );
+  app.delete(
+    '/comments/:id',
+    authenticatedAdmin,
+    commentController.deleteComment
+  );
 };
