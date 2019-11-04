@@ -7,5 +7,8 @@ module.exports = {
   },
   replace: function(a) {
     return a.replace(/@example.com/g, '');
+  },
+  postLength: function(a) {
+    return a.length;
   }
 };

@@ -16,7 +16,6 @@ const adminController = {
 
   getRestaurants: (req, res) => {
     return Restaurant.findAll({ include: [Category] }).then(restaurants => {
-      console.log(restaurants);
       return res.render('admin/restaurants', { restaurants });
     });
   },
@@ -138,7 +137,6 @@ const adminController = {
 
   putUser: (req, res) => {
     return User.findByPk(req.params.id).then(user => {
-      // return console.log(user);
       user.update({ isAdmin: !user.dataValues.isAdmin }).then(() => {
         req.flash('success_messages', 'user is up to update');
         res.redirect('/admin/users');

@@ -1,9 +1,12 @@
 const bcrypt = require('bcryptjs');
-const fs = require('fs');
 const imgur = require('imgur-node-api');
+const Sequelize = require('sequelize');
 const IMGUR_CLIENT_ID = process.env.imgur_id;
 const db = require('../models');
 const User = db.User;
+const Comment = db.Comment;
+const Restaurant = db.Restaurant;
+const Op = Sequelize.Op;
 
 const userController = {
   signInPage: (req, res) => {
@@ -58,7 +61,26 @@ const userController = {
 
   getUser: (req, res) => {
     return User.findByPk(req.params.id).then(user => {
-      return res.render('users', { user });
+      if (req.params.id) {
+        Comment.findAll().then(comments => {
+          let userComment = [];
+          comments.map(comment => {
+            if (comment.dataValues.UserId === Number(req.params.id)) {
+              userComment.push(comment.dataValues);
+            }
+          });
+          const id = userComment.map(c => c.RestaurantId);
+          Restaurant.findAll({
+            where: {
+              id: {
+                [Op.in]: id
+              }
+            }
+          }).then(restlists => {
+            return res.render('users', { user, userComment, restlists });
+          });
+        });
+      }
     });
   },
 
