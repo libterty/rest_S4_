@@ -1,8 +1,7 @@
 <ul class="nav nav-pills">
   <li class="nav-item">
     <a 
-      class="nav-link"
-      {{#if (eq '' categoryId)}}active{{/if}}
+      class="nav-link {{#if (eq '' categoryId)}}active{{/if}}"
       href="?categoryId="
     >
       全部
@@ -11,8 +10,7 @@
   {{#each categories}}
     <li class="nav-item">
       <a 
-        class="nav-link"
-        {{#if (eq this.id ../categoryId)}}active{{/if}}
+        class="nav-link {{#if (eq this.id ../categoryId)}}active{{/if}}"
         href="?categoryId={{this.id}}"
       >
         {{this.name}}
@@ -42,3 +40,27 @@
 </div>
 <br />
 <br />
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="/restaurants?page={{prev}}&categoryId={{categoryId}}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {{#each totalPage}}
+      {{#if (eq this ../page)}}
+        <li class="page-item active">
+          <a class="page-link" href="#">{{this}}</a>
+        </li>
+      {{else}}
+        <li class="page-item">
+          <a class="page-link" href="/restaurants?page={{this}}&categoryId={{../categoryId}}">{{this}}</a>
+        </li>
+      {{/if}}
+    {{/each}}
+    <a class="page-link" href="/restaurants?page={{next}}&categoryId={{categoryId}}" aria-label="Next">
+      <span aria-hidden="true">&raquo;</span>
+    </a>
+    </li>
+  </ul>
+</nav>
