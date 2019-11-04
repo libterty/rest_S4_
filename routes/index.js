@@ -23,10 +23,8 @@ module.exports = (app, passport) => {
     res.redirect('/signin');
   };
 
-  // 如果使用者訪問首頁，就導向 /restaurants 的頁面
   app.get('/', authenticated, (req, res) => res.redirect('restaurants'));
   app.get('/restaurants', authenticated, restController.getRestaurants);
-  // 連到 /admin 頁面就轉到 /admin/restaurants
   app.get('/admin', authenticatedAdmin, (req, res) =>
     res.redirect('/admin/restaurants')
   );
@@ -59,6 +57,11 @@ module.exports = (app, passport) => {
     authenticatedAdmin,
     categoryController.getCategories
   );
+  app.get(
+    '/admin/categories/:id',
+    authenticatedAdmin,
+    categoryController.getCategories
+  );
 
   app.post(
     '/signin',
@@ -88,6 +91,11 @@ module.exports = (app, passport) => {
     adminController.putRestaurant
   );
   app.put('/admin/users/:id', authenticatedAdmin, adminController.putUser);
+  app.put(
+    '/admin/categories/:id',
+    authenticatedAdmin,
+    categoryController.putCategory
+  );
 
   app.delete(
     '/admin/restaurants/:id',
