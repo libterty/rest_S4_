@@ -78,6 +78,24 @@ const restController = {
         });
       });
     });
+  },
+
+  getDashboard: (req, res) => {
+    return Restaurant.findByPk(req.params.id).then(restaurant => {
+      if (req.params.id) {
+        Comment.findAll().then(comments => {
+          let restComment = [];
+          comments.map(c => {
+            if ((c.dataValues.RestaurantId = Number(req.params.id))) {
+              restComment.push(c.dataValues);
+            }
+          });
+          Category.findByPk(restaurant.CategoryId).then(cat => {
+            return res.render('dashboard', { restaurant, restComment, cat });
+          });
+        });
+      }
+    });
   }
 };
 module.exports = restController;
