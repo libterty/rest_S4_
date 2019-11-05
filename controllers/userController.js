@@ -86,6 +86,20 @@ const userController = {
     });
   },
 
+  getTopUser: (req, res) => {
+    return User.findAll({
+      include: [{ model: User, as: 'Followers' }]
+    }).then(users => {
+      users = users.map(user => ({
+        ...user.dataValues,
+        FollowerCount: user.Followers.length,
+        isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
+      }));
+      users = users.sort((a, b) => b.FollowerCount - a.FollowerCount);
+      return res.render('topUser', { users });
+    });
+  },
+
   editUser: (req, res) => {
     return User.findByPk(req.params.id).then(user => {
       return res.render('create', { user });
