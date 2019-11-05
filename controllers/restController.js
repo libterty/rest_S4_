@@ -51,10 +51,13 @@ const restController = {
     });
   },
 
-  getRestaurant: (req, res) => {
+  getRestaurant: async (req, res) => {
     return Restaurant.findByPk(req.params.id, {
       include: [Category, { model: Comment, include: [User] }]
     }).then(restaurant => {
+      restaurant.update({
+        viewCounts: restaurant.viewCounts ? restaurant.viewCounts + 1 : 1
+      });
       return res.render('restaurant', {
         restaurant
       });
