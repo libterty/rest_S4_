@@ -10,5 +10,8 @@ module.exports = {
   },
   postLength: function(a) {
     return a.length;
+  },
+  reduceLength: function(a) {
+    return a.slice(0, 50);
   }
 };

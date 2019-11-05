@@ -155,7 +155,15 @@ const userController = {
       UserId: req.user.id,
       RestaurantId: req.params.restaurantId
     }).then(() => {
-      return res.redirect('back');
+      Restaurant.findByPk(req.params.restaurantId).then(restaurant => {
+        restaurant
+          .update({
+            favCounts: restaurant.favCounts ? restaurant.favCounts + 1 : 1
+          })
+          .then(() => {
+            return res.redirect('back');
+          });
+      });
     });
   },
 
@@ -167,6 +175,11 @@ const userController = {
       }
     }).then(favorite => {
       favorite.destroy().then(() => {
+        Restaurant.findByPk(req.params.restaurantId).then(restaurant =>
+          restaurant.update({
+            favCounts: restaurant.favCounts ? restaurant.favCounts - 1 : 0
+          })
+        );
         return res.redirect('back');
       });
     });
