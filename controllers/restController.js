@@ -51,7 +51,7 @@ const restController = {
     });
   },
 
-  getRestaurant: async (req, res) => {
+  getRestaurant: (req, res) => {
     return Restaurant.findByPk(req.params.id, {
       include: [Category, { model: Comment, include: [User] }]
     }).then(restaurant => {

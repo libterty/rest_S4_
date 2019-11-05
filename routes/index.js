@@ -94,6 +94,11 @@ module.exports = (app, passport) => {
     categoryController.postCategory
   );
   app.post('/comments', authenticated, commentController.postComment);
+  app.post(
+    '/favorite/:restaurantId',
+    authenticated,
+    userController.addFavorite
+  );
 
   app.put(
     '/admin/restaurants/:id',
@@ -128,5 +133,10 @@ module.exports = (app, passport) => {
     '/comments/:id',
     authenticatedAdmin,
     commentController.deleteComment
+  );
+  app.delete(
+    '/favorite/:restaurantId',
+    authenticated,
+    userController.removeFavorite
   );
 };
