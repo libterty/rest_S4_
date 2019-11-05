@@ -99,6 +99,7 @@ module.exports = (app, passport) => {
     authenticated,
     userController.addFavorite
   );
+  app.post('/like/:restaurantId', authenticated, userController.addLike);
 
   app.put(
     '/admin/restaurants/:id',
@@ -139,4 +140,5 @@ module.exports = (app, passport) => {
     authenticated,
     userController.removeFavorite
   );
+  app.delete('/like/:restaurantId', authenticated, userController.removeLike);
 };

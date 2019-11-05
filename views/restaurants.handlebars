@@ -52,6 +52,19 @@
               <button type="submit" class="btn btn-primary">加到最愛</button>
             </form>
             {{/if}}
+            {{#if this.isLiked}}
+            <form action="/like/{{this.id}}?_method=DELETE" method="POST">
+              <button type="submit" class="btn btn-danger">
+                <i class="fas fa-heart"></i>
+              </button>
+            </form>
+            {{else}}
+            <form action="/like/{{this.id}}" method="POST">
+              <button type="submit" class="btn btn-primary">
+                <i class="far fa-heart"></i>
+              </button>
+            </form>
+            {{/if}}
           </div>
         </div>
       </div>
