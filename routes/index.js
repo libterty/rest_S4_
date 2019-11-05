@@ -101,6 +101,7 @@ module.exports = (app, passport) => {
     userController.addFavorite
   );
   app.post('/like/:restaurantId', authenticated, userController.addLike);
+  app.post('/following/:userId', authenticated, userController.addFollowing);
 
   app.put(
     '/admin/restaurants/:id',
@@ -142,4 +143,9 @@ module.exports = (app, passport) => {
     userController.removeFavorite
   );
   app.delete('/like/:restaurantId', authenticated, userController.removeLike);
+  app.delete(
+    '/following/:userId',
+    authenticated,
+    userController.removeFollowing
+  );
 };
