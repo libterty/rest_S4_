@@ -7,7 +7,7 @@ const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const Handlebars = require('handlebars');
 const H = require('just-handlebars-helpers');
-const db = require('./models');
+// const db = require('./models');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -41,7 +41,7 @@ app.use(methodOverride('_method'));
 H.registerHelpers(Handlebars);
 
 const server = app.listen(port, () => {
-  db.sequelize.sync();
+  // db.sequelize.sync();
   console.log(`Example app listening on port http://localhost:${port}`);
 });
 
