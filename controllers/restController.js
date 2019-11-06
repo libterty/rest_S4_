@@ -127,7 +127,6 @@ const restController = {
         ...fav.dataValues
       }));
       const id = favorite.map(c => c.RestaurantId);
-      console.log('id', id);
       Restaurant.findAll({
         where: {
           id: {
@@ -135,10 +134,13 @@ const restController = {
           }
         }
       }).then(restlists => {
-        restlists = restlists.map(rest => ({ ...rest.dataValues }));
         const restaurant = restlists
+          .map(rest => ({ ...rest.dataValues }))
           .sort((a, b) => b.favCounts - a.favCounts)
           .slice(0, 10);
+        // const restaurant = restlists
+        //   .sort((a, b) => b.favCounts - a.favCounts)
+        //   .slice(0, 10);
         return res.render('topRestaurant', { restaurant });
       });
     });

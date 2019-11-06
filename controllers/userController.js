@@ -63,24 +63,77 @@ const userController = {
   },
 
   getUser: (req, res) => {
+    let userComment = [];
+    let userFavorite = [];
     return User.findByPk(req.params.id).then(user => {
       if (req.params.id) {
         Comment.findAll().then(comments => {
-          let userComment = [];
-          comments.map(comment => {
-            if (comment.dataValues.UserId === Number(req.params.id)) {
-              userComment.push(comment.dataValues);
-            }
-          });
-          const id = userComment.map(c => c.RestaurantId);
-          Restaurant.findAll({
-            where: {
-              id: {
-                [Op.in]: id
+          Favorite.findAll().then(favorites => {
+            favorites.map(f => {
+              if (f.dataValues.UserId === Number(req.params.id)) {
+                userFavorite.push(f.dataValues);
               }
-            }
-          }).then(restlists => {
-            return res.render('users', { user, userComment, restlists });
+            });
+            comments.map(c => {
+              if (c.dataValues.UserId === Number(req.params.id)) {
+                userComment.push(c.dataValues);
+              }
+            });
+            const userFavId = userFavorite.map(f => f.RestaurantId);
+            const userCommentId = userComment.map(c => c.RestaurantId);
+            Restaurant.findAll({
+              where: {
+                id: {
+                  [Op.in]: userCommentId
+                }
+              }
+            }).then(restComLists => {
+              Restaurant.findAll({
+                where: {
+                  id: {
+                    [Op.in]: userFavId
+                  }
+                }
+              }).then(restFavLists => {
+                Followship.findAll().then(follows => {
+                  let followerId = [];
+                  let followingId = [];
+                  follows
+                    .map(f => ({ ...f.dataValues }))
+                    .map(c => {
+                      if (c.followerId === user.id) {
+                        followingId.push(c.followingId);
+                      }
+                      if (c.followingId === user.id) {
+                        followerId.push(c.followerId);
+                      }
+                    });
+                  User.findAll().then(users => {
+                    let followers = [];
+                    let followings = [];
+                    users
+                      .map(u => ({ ...u.dataValues }))
+                      .map(c => {
+                        followerId.map(f =>
+                          f === c.id ? followers.push(c) : null
+                        );
+                        followingId.map(f =>
+                          f === c.id ? followings.push(c) : null
+                        );
+                      });
+                    return res.render('users', {
+                      user,
+                      userComment,
+                      userFavorite,
+                      restComLists,
+                      restFavLists,
+                      followers,
+                      followings
+                    });
+                  });
+                });
+              });
+            });
           });
         });
       }

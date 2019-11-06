@@ -5,11 +5,20 @@
     <div class="col-md-8">
         <h3>{{user.name}}</h3>
         {{#if userComment}}
-          <h3>{{postLength userComment}}則評論</h3>
+          <h3>{{postLength userComment}} 則評論</h3>
         {{/if}}
-        <button type="button" class="btn btn-link">
-          <a href="/users/{{user.id}}/edit">
-            Edit
+        {{#if userFavorite}}
+          <h3>{{postLength userFavorite}} 則收藏</h3>
+        {{/if}}
+        {{#if followers}}
+          <h3>{{postLength followers}} followers(追蹤者)</h3>
+        {{/if}}
+        {{#if followings}}
+          <h3>{{postLength followings}} followings(追蹤者)</h3>
+        {{/if}}
+        <button type="button" class="btn btn-primary">
+          <a href="/users/{{user.id}}/edit" style="color: black;">
+            編輯個人資訊
           </a>
         </button>
     </div>
@@ -19,17 +28,66 @@
 <hr>
 
 <div class="row">
-  <div class="col-md-12">
-    {{#if userComment}}
-      <h3>{{postLength userComment}}則評論</h3>
-    {{/if}}
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-12">
+        {{#if followers}}
+          <h3>{{postLength followers}} followers(追蹤者)</h3>
+        {{/if}}
+      </div>
+      <div class="col-md-12">
+        {{#each followers}}
+          <a href="/users/{{this.id}}" class="col-md-2">
+            <img src="{{this.image}}" alt="Card image cap" width="143px" height="90px" class="profile-img">
+          </a>
+        {{/each}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#if followers}}
+          <h3>{{postLength followings}} followings(追蹤者)</h3>
+        {{/if}}
+      </div>
+      <div class="col-md-12">
+        {{#each followings}}
+          <a href="/users/{{this.id}}" class="col-md-2">
+            <img src="{{this.image}}" alt="Card image cap" width="143px" height="90px" class="profile-img">
+          </a>
+        {{/each}}
+      </div>
+    </div>
   </div>
-
-  {{#each restlists}}
-    <a href="/restaurants/{{this.dataValues.id}}" class="col-md-2">
-      <img src="{{this.dataValues.image}}" alt="Card image cap" width="143px" height="90px">
-    </a>
-  {{/each}}
+  <div class="col-md-6">
+    <div class="row">
+      <div class="col-md-12">
+        {{#if userComment}}
+          <h3>{{postLength userComment}} 則評論</h3>
+        {{/if}}
+      </div>
+      <div class="col-md-12">
+        {{#each restComLists}}
+          <a href="/restaurants/{{this.dataValues.id}}" class="col-md-2">
+            <img src="{{this.dataValues.image}}" alt="Card image cap" width="143px" height="90px" class="profile-img">
+          </a>
+        {{/each}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        {{#if userFavorite}}
+          <h3>{{postLength userFavorite}} 則收藏</h3>
+        {{/if}}
+      </div>
+      <div class="col-md-12">
+        {{#each restFavLists}}
+          <a href="/restaurants/{{this.dataValues.id}}" class="col-md-2">
+            <img src="{{this.dataValues.image}}" alt="Card image cap" width="143px" height="90px" class="profile-img">
+          </a>
+        {{/each}}
+      </div>
+    </div>
+  </div>
 </div>
 <br />
 <br />
