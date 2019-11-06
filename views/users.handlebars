@@ -6,15 +6,23 @@
         <h3>{{user.name}}</h3>
         {{#if userComment}}
           <h3>{{postLength userComment}} 則評論</h3>
+        {{else}}
+          <h3>0 則評論</h3>
         {{/if}}
         {{#if userFavorite}}
           <h3>{{postLength userFavorite}} 則收藏</h3>
+        {{else}}
+          <h3>0 則收藏</h3>
         {{/if}}
         {{#if followers}}
           <h3>{{postLength followers}} followers(追蹤者)</h3>
+        {{else}}
+          <h3>0 followers(追蹤者)</h3>
         {{/if}}
         {{#if followings}}
           <h3>{{postLength followings}} followings(追蹤者)</h3>
+        {{else}}
+          <h3>0 followings(追蹤者)</h3>
         {{/if}}
         <button type="button" class="btn btn-primary">
           <a href="/users/{{user.id}}/edit" style="color: black;">
@@ -33,6 +41,8 @@
       <div class="col-md-12">
         {{#if followers}}
           <h3>{{postLength followers}} followers(追蹤者)</h3>
+        {{else}}
+          <h3>0 followers(追蹤者)</h3>
         {{/if}}
       </div>
       <div class="col-md-12">
@@ -47,6 +57,8 @@
       <div class="col-md-12">
         {{#if followers}}
           <h3>{{postLength followings}} followings(追蹤者)</h3>
+        {{else}}
+          <h3>0 followings(追蹤者)</h3>
         {{/if}}
       </div>
       <div class="col-md-12">
@@ -63,6 +75,8 @@
       <div class="col-md-12">
         {{#if userComment}}
           <h3>{{postLength userComment}} 則評論</h3>
+        {{else}}
+          <h3>0 則評論</h3>
         {{/if}}
       </div>
       <div class="col-md-12">
@@ -77,6 +91,8 @@
       <div class="col-md-12">
         {{#if userFavorite}}
           <h3>{{postLength userFavorite}} 則收藏</h3>
+        {{else}}
+          <h3>0 則收藏</h3>
         {{/if}}
       </div>
       <div class="col-md-12">
