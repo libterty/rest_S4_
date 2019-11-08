@@ -17,7 +17,10 @@ const userController = {
   },
 
   signIn: (req, res) => {
+    // console.log('userController req', req.user);
+    // console.log('req data', req.user.dataValues);
     req.flash('success_messages', '成功登入！');
+    // res.redirect('/restaurants');
     req.user.dataValues.isAdmin
       ? res.redirect('/admin/restaurants')
       : res.redirect('/restaurants');
@@ -65,9 +68,12 @@ const userController = {
   getUser: (req, res) => {
     let userComment = [];
     let userFavorite = [];
+    console.log(req.params.id);
     return User.findByPk(req.params.id).then(user => {
+      console.log('user', user);
       if (req.params.id) {
         Comment.findAll().then(comments => {
+          console.log(comments);
           Favorite.findAll().then(favorites => {
             favorites.map(f => {
               if (f.dataValues.UserId === Number(req.params.id)) {
@@ -95,6 +101,7 @@ const userController = {
                   }
                 }
               }).then(restFavLists => {
+                console.log('restFavLists', restFavLists);
                 Followship.findAll().then(follows => {
                   let followerId = [];
                   let followingId = [];
@@ -162,6 +169,7 @@ const userController = {
 
   putUser: (req, res) => {
     if (!req.body.name) {
+      console.log('req', req);
       req.flash('error_messages', "name didn't exist");
       return res.redirect('back');
     }
