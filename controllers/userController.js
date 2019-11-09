@@ -17,10 +17,7 @@ const userController = {
   },
 
   signIn: (req, res) => {
-    // console.log('userController req', req.user);
-    // console.log('req data', req.user.dataValues);
     req.flash('success_messages', '成功登入！');
-    // res.redirect('/restaurants');
     req.user.dataValues.isAdmin
       ? res.redirect('/admin/restaurants')
       : res.redirect('/restaurants');
@@ -31,12 +28,10 @@ const userController = {
   },
 
   signUp: (req, res) => {
-    // confirm password
     if (req.body.passwordCheck !== req.body.password) {
       req.flash('error_messages', '兩次密碼輸入不同！');
       return res.redirect('/signup');
     } else {
-      // confirm unique user
       User.findOne({ where: { email: req.body.email } }).then(user => {
         if (user) {
           req.flash('error_messages', '信箱重複！');
@@ -68,12 +63,9 @@ const userController = {
   getUser: (req, res) => {
     let userComment = [];
     let userFavorite = [];
-    console.log(req.params.id);
     return User.findByPk(req.params.id).then(user => {
-      console.log('user', user);
       if (req.params.id) {
         Comment.findAll().then(comments => {
-          console.log(comments);
           Favorite.findAll().then(favorites => {
             favorites.map(f => {
               if (f.dataValues.UserId === Number(req.params.id)) {
@@ -101,7 +93,6 @@ const userController = {
                   }
                 }
               }).then(restFavLists => {
-                console.log('restFavLists', restFavLists);
                 Followship.findAll().then(follows => {
                   let followerId = [];
                   let followingId = [];
@@ -169,7 +160,6 @@ const userController = {
 
   putUser: (req, res) => {
     if (!req.body.name) {
-      console.log('req', req);
       req.flash('error_messages', "name didn't exist");
       return res.redirect('back');
     }
@@ -179,7 +169,7 @@ const userController = {
       imgur.setClientID(IMGUR_CLIENT_ID);
       imgur.upload(file.path, (err, img) => {
         if (err) console.log('Upload Img Error: ', err.message);
-        return User.findByPk(req.params.id).then(user => {
+        return User.findByPk(req.user.dataValues.id).then(user => {
           user
             .update({
               name: req.body.name,
@@ -195,7 +185,7 @@ const userController = {
         });
       });
     } else {
-      return User.findByPk(req.params.id).then(user => {
+      return User.findByPk(req.user.dataValues.id).then(user => {
         user
           .update({
             name: req.body.name
