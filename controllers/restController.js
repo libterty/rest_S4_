@@ -109,7 +109,7 @@ const restController = {
         Comment.findAll().then(comments => {
           let restComment = [];
           comments.map(c => {
-            if ((c.dataValues.RestaurantId = Number(req.params.id))) {
+            if (c.dataValues.RestaurantId === Number(req.params.id)) {
               restComment.push(c.dataValues);
             }
           });
