@@ -14,6 +14,17 @@ module.exports = (app, passport) => {
     res.redirect('/signin');
   };
 
+  const authenticatedUser = (req, res, next) => {
+    if (req.isAuthenticated()) {
+      if (req.user.id == req.params.id) {
+        return next();
+      }
+      req.flash('error_messages', 'Bad Request!');
+      return res.redirect(`/users/${req.user.id}`);
+    }
+    res.redirect('/signin');
+  };
+
   const authenticatedAdmin = (req, res, next) => {
     if (req.isAuthenticated()) {
       if (req.user.isAdmin) {
@@ -35,8 +46,8 @@ module.exports = (app, passport) => {
     restController.getDashboard
   );
   app.get('/users/top', authenticated, userController.getTopUser);
-  app.get('/users/:id', authenticated, userController.getUser);
-  app.get('/users/:id/edit', authenticated, userController.editUser);
+  app.get('/users/:id', authenticatedUser, userController.getUser);
+  app.get('/users/:id/edit', authenticatedUser, userController.editUser);
   app.get('/signup', userController.signUpPage);
   app.get('/signin', userController.signInPage);
   app.get('/logout', userController.logout);
@@ -118,7 +129,7 @@ module.exports = (app, passport) => {
   );
   app.put(
     '/users/:id',
-    authenticated,
+    authenticatedUser,
     upload.single('image'),
     userController.putUser
   );

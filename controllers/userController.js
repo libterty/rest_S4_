@@ -169,7 +169,7 @@ const userController = {
       imgur.setClientID(IMGUR_CLIENT_ID);
       imgur.upload(file.path, (err, img) => {
         if (err) console.log('Upload Img Error: ', err.message);
-        return User.findByPk(req.user.dataValues.id).then(user => {
+        return User.findByPk(req.params.id).then(user => {
           user
             .update({
               name: req.body.name,
@@ -185,10 +185,11 @@ const userController = {
         });
       });
     } else {
-      return User.findByPk(req.user.dataValues.id).then(user => {
+      return User.findByPk(req.params.id).then(user => {
         user
           .update({
-            name: req.body.name
+            name: req.body.name,
+            image: user.image
           })
           .then(user => {
             req.flash(
