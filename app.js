@@ -45,6 +45,6 @@ const server = app.listen(port, () => {
   console.log(`Example app listening on port http://localhost:${port}`);
 });
 
-require('./routes')(app, passport);
+require('./routes')(app);
 
 module.exports = server;
