@@ -15,6 +15,18 @@ const adminService = {
         callback({ restaurant });
       }
     );
+  },
+
+  getCategories: (req, res, callback) => {
+    return Category.findAll().then(categories => {
+      if (req.params.id) {
+        Category.findByPk(req.params.id).then(category => {
+          callback({ categories, category });
+        });
+      } else {
+        callback({ categories });
+      }
+    });
   }
 };
 
