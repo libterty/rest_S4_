@@ -28,12 +28,10 @@ const userController = {
   },
 
   signUp: (req, res) => {
-    // confirm password
     if (req.body.passwordCheck !== req.body.password) {
       req.flash('error_messages', '兩次密碼輸入不同！');
       return res.redirect('/signup');
     } else {
-      // confirm unique user
       User.findOne({ where: { email: req.body.email } }).then(user => {
         if (user) {
           req.flash('error_messages', '信箱重複！');
@@ -190,7 +188,8 @@ const userController = {
       return User.findByPk(req.params.id).then(user => {
         user
           .update({
-            name: req.body.name
+            name: req.body.name,
+            image: user.image
           })
           .then(user => {
             req.flash(
