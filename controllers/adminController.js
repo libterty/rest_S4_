@@ -12,8 +12,8 @@ const Category = db.Category;
 
 const adminController = {
   getUsers: (req, res) => {
-    return User.findAll().then(users => {
-      return res.render('admin/users', { users });
+    adminService.getUsers(req, res, data => {
+      return res.render('admin/users', data);
     });
   },
 

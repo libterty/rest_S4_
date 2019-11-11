@@ -20,6 +20,12 @@ const authenticatedAdmin = (req, res, next) => {
 };
 
 router.get(
+  '/admin/users',
+  authenticated,
+  authenticatedAdmin,
+  adminController.getUsers
+);
+router.get(
   '/admin/restaurants',
   authenticated,
   authenticatedAdmin,

@@ -4,8 +4,15 @@ const IMGUR_CLIENT_ID = process.env.imgur_id;
 const db = require('../models');
 const Restaurant = db.Restaurant;
 const Category = db.Category;
+const User = db.User;
 
 const adminService = {
+  getUsers: (req, res, callback) => {
+    return User.findAll().then(users => {
+      callback({ users });
+    });
+  },
+
   getRestaurants: (req, res, callback) => {
     return Restaurant.findAll({ include: [Category] }).then(restaurants => {
       callback({ restaurants });
