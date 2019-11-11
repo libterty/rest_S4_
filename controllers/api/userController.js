@@ -1,12 +1,7 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const db = require('../../models');
 const User = db.User;
-
-// JWT
-const jwt = require('jsonwebtoken');
-const passportJWT = require('passport-jwt');
-const ExtractJwt = passportJWT.ExtractJwt;
-const JwtStrategy = passportJWT.Strategy;
 
 let userController = {
   signIn: (req, res) => {
@@ -32,7 +27,9 @@ let userController = {
         });
       }
       var payload = { id: user.id, iat: Date.now() };
-      var token = jwt.sign(payload, process.env.token, { expiresIn: '7d' });
+      var token = jwt.sign(payload, process.env.JWT_SECRET, {
+        expiresIn: '7d'
+      });
       return res.json({
         status: 'success',
         message: 'ok',

@@ -1,8 +1,15 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcryptjs');
+const passportJWT = require('passport-jwt');
+const ExtractJwt = passportJWT.ExtractJwt;
+const JwtStrategy = passportJWT.Strategy;
 const db = require('../models');
 const User = db.User;
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 // setup passport strategy
 passport.use(
@@ -35,7 +42,6 @@ passport.use(
   )
 );
 
-// serialize and deserialize user
 passport.serializeUser((user, cb) => {
   cb(null, user.id);
 });
@@ -51,5 +57,24 @@ passport.deserializeUser((id, cb) => {
     return cb(null, user);
   });
 });
+
+let jwtOptions = {};
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+jwtOptions.secretOrKey = process.env.JWT_SECRET;
+
+let strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
+  User.findByPk(jwt_payload.id, {
+    include: [
+      { model: db.Restaurant, as: 'FavoritedRestaurants' },
+      { model: db.Restaurant, as: 'LikedRestaurants' },
+      { model: User, as: 'Followers' },
+      { model: User, as: 'Followings' }
+    ]
+  }).then(user => {
+    if (!user) return next(null, false);
+    return next(null, user);
+  });
+});
+passport.use(strategy);
 
 module.exports = passport;
