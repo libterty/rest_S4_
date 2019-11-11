@@ -20,18 +20,6 @@ const adminService = {
     );
   },
 
-  getCategories: (req, res, callback) => {
-    return Category.findAll().then(categories => {
-      if (req.params.id) {
-        Category.findByPk(req.params.id).then(category => {
-          callback({ categories, category });
-        });
-      } else {
-        callback({ categories });
-      }
-    });
-  },
-
   postRestaurant: (req, res, callback) => {
     if (!req.body.name) {
       return callback({ status: 'error', message: "name didn't exist" });
