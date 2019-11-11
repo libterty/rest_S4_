@@ -42,6 +42,18 @@ const categoryService = {
         });
       });
     }
+  },
+
+  deleteCategory: (req, res, callback) => {
+    return Category.findByPk(req.params.id)
+      .then(category => {
+        category.destroy().then(() => {
+          callback({ status: 'success', message: 'Delete Success' });
+        });
+      })
+      .catch(err => {
+        callback({ status: 'error', message: err.message });
+      });
   }
 };
 

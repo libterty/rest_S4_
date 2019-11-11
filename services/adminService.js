@@ -112,11 +112,15 @@ const adminService = {
   },
 
   deleteRestaurant: (req, res, callback) => {
-    return Restaurant.findByPk(req.params.id).then(restaurant => {
-      restaurant.destroy().then(() => {
-        callback({ status: 'success', message: '' });
+    return Restaurant.findByPk(req.params.id)
+      .then(restaurant => {
+        restaurant.destroy().then(() => {
+          callback({ status: 'success', message: 'Delete Success' });
+        });
+      })
+      .catch(err => {
+        callback({ status: 'error', message: err.message });
       });
-    });
   }
 };
 
