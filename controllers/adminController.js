@@ -1,14 +1,4 @@
-/* eslint-disable no-unused-vars */
-const fs = require('fs');
-const imgur = require('imgur-node-api');
-const IMGUR_CLIENT_ID = process.env.imgur_id;
-
-const db = require('../models');
 const adminService = require('../services/adminService.js');
-
-const Restaurant = db.Restaurant;
-const User = db.User;
-const Category = db.Category;
 
 const adminController = {
   getUsers: (req, res) => {
