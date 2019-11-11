@@ -45,6 +45,7 @@ router.get(
 );
 
 router.post('/signin', userController.signIn);
+router.post('/signup', userController.signUp);
 router.post(
   '/admin/restaurants',
   upload.single('image'),
