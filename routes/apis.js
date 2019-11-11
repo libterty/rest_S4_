@@ -8,4 +8,6 @@ router.get('/admin/restaurants/:id', adminController.getRestaurant);
 router.get('/admin/categories', adminController.getCategories);
 router.get('/admin/categories/:id', adminController.getCategories);
 
+router.delete('/admin/restaurants/:id', adminController.deleteRestaurant);
+
 module.exports = router;
