@@ -45,12 +45,10 @@ const adminController = {
       res.redirect('/admin/restaurants');
     });
   },
-
+  
   editRestaurant: (req, res) => {
-    return Restaurant.findByPk(req.params.id).then(restaurant => {
-      Category.findAll().then(categories => {
-        return res.render('admin/create', { restaurant, categories });
-      });
+    adminService.editRestaurant(req, res, data => {
+      return res.render('admin/create', data);
     });
   },
 

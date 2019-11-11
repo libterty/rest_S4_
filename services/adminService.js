@@ -75,6 +75,14 @@ const adminService = {
     }
   },
 
+  editRestaurant: (req, res, callback) => {
+    return Restaurant.findByPk(req.params.id).then(restaurant => {
+      Category.findAll().then(categories => {
+        callback({ restaurant, categories });
+      });
+    });
+  },
+
   putRestaurant: (req, res, callback) => {
     if (!req.body.name) {
       return callback({ status: 'error', message: "name didn't exist" });

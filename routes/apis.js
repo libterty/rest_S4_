@@ -44,6 +44,12 @@ router.get(
   adminController.getRestaurant
 );
 router.get(
+  '/admin/restaurants/:id/edit',
+  authenticated,
+  authenticatedAdmin,
+  adminController.editRestaurant
+);
+router.get(
   '/admin/categories',
   authenticated,
   authenticatedAdmin,
