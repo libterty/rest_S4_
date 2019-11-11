@@ -28,7 +28,7 @@ const adminController = {
       return res.render('admin/restaurant', data);
     });
   },
-  
+
   createRestaurant: (req, res) => {
     adminService.createRestaurant(req, res, data => {
       return res.render('admin/create', data);
@@ -45,7 +45,7 @@ const adminController = {
       res.redirect('/admin/restaurants');
     });
   },
-  
+
   editRestaurant: (req, res) => {
     adminService.editRestaurant(req, res, data => {
       return res.render('admin/create', data);
@@ -64,11 +64,13 @@ const adminController = {
   },
 
   putUser: (req, res) => {
-    return User.findByPk(req.params.id).then(user => {
-      user.update({ isAdmin: !user.dataValues.isAdmin }).then(() => {
-        req.flash('success_messages', 'user is up to update');
-        res.redirect('/admin/users');
-      });
+    adminService.putUser(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
+        return res.redirect('back');
+      }
+      req.flash('success_messages', data['message']);
+      res.redirect('/admin/users');
     });
   },
 

@@ -86,6 +86,12 @@ router.put(
   adminController.putRestaurant
 );
 router.put(
+  '/admin/users/:id',
+  authenticated,
+  authenticatedAdmin,
+  adminController.putUser
+);
+router.put(
   '/admin/categories/:id',
   authenticated,
   authenticatedAdmin,

@@ -132,6 +132,25 @@ const adminService = {
     }
   },
 
+  putUser: (req, res, callback) => {
+    return User.findByPk(req.params.id).then(user => {
+      user
+        .update({ isAdmin: !user.dataValues.isAdmin })
+        .then(() => {
+          callback({
+            status: 'success',
+            message: 'user was successfully update to date'
+          });
+        })
+        .catch(err => {
+          callback({
+            status: 'error',
+            message: err.message
+          });
+        });
+    });
+  },
+
   deleteRestaurant: (req, res, callback) => {
     return Restaurant.findByPk(req.params.id)
       .then(restaurant => {
