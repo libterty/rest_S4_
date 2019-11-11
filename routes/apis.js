@@ -32,6 +32,12 @@ router.get(
   adminController.getRestaurants
 );
 router.get(
+  '/admin/restaurants/create',
+  authenticated,
+  authenticatedAdmin,
+  adminController.createRestaurant
+);
+router.get(
   '/admin/restaurants/:id',
   authenticated,
   authenticatedAdmin,

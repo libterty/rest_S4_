@@ -28,10 +28,10 @@ const adminController = {
       return res.render('admin/restaurant', data);
     });
   },
-
+  
   createRestaurant: (req, res) => {
-    Category.findAll().then(categories => {
-      return res.render('admin/create', { categories });
+    adminService.createRestaurant(req, res, data => {
+      return res.render('admin/create', data);
     });
   },
 
