@@ -6,6 +6,7 @@ const passport = require('../config/passport');
 const adminController = require('../controllers/api/adminController.js');
 const categoryController = require('../controllers/api/categoryController.js');
 const userController = require('../controllers/api/userController.js');
+const commentController = require('../controllers/api/commentController');
 const authenticated = passport.authenticate('jwt', { session: false });
 
 const authenticatedAdmin = (req, res, next) => {
@@ -19,6 +20,12 @@ const authenticatedAdmin = (req, res, next) => {
   }
 };
 
+router.get(
+  '/comments',
+  authenticated,
+  authenticatedAdmin,
+  commentController.getComments
+);
 router.get(
   '/admin/users',
   authenticated,
@@ -64,6 +71,7 @@ router.get(
 
 router.post('/signin', userController.signIn);
 router.post('/signup', userController.signUp);
+router.post('/comments', authenticated, commentController.postComment);
 router.post(
   '/admin/restaurants',
   upload.single('image'),
@@ -110,5 +118,6 @@ router.delete(
   authenticatedAdmin,
   categoryController.deleteCategory
 );
+router.delete('/comments/:id', authenticated, commentController.deleteComment);
 
 module.exports = router;
