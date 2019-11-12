@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../../models');
+const userService = require('../../services/userService');
 const User = db.User;
 
 let userController = {
@@ -66,6 +67,18 @@ let userController = {
         }
       });
     }
+  },
+
+  getUser: (req, res) => {
+    userService.getUser(req, res, data => {
+      return res.json(data);
+    });
+  },
+
+  getTopUser: (req, res) => {
+    userService.getTopUser(req, res, data => {
+      return res.json(data);
+    });
   }
 };
 

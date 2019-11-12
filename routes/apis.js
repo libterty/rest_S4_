@@ -10,6 +10,17 @@ const commentController = require('../controllers/api/commentController');
 const restController = require('../controllers/api/restController');
 const authenticated = passport.authenticate('jwt', { session: false });
 
+const authenticatedUser = (req, res, next) => {
+  if (req.user) {
+    if (req.user.id == req.params.id) {
+      return next();
+    }
+    return res.json({ status: 'error', message: 'permission denied' });
+  } else {
+    return res.json({ status: 'error', message: 'permission denied' });
+  }
+};
+
 const authenticatedAdmin = (req, res, next) => {
   if (req.user) {
     if (req.user.isAdmin) {
@@ -35,6 +46,13 @@ router.get(
   '/restaurants/:id/dashboard',
   authenticated,
   restController.getDashboard
+);
+router.get('/users/top', authenticated, userController.getTopUser);
+router.get(
+  '/users/:id',
+  authenticated,
+  authenticatedUser,
+  userController.getUser
 );
 router.get(
   '/admin/users',
