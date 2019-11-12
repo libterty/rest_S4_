@@ -28,6 +28,8 @@ router.get(
   commentController.getComments
 );
 router.get('/restaurants', authenticated, restController.getRestaurants);
+router.get('/restaurants/feeds', authenticated, restController.getFeeds);
+router.get('/restaurants/:id', authenticated, restController.getRestaurant);
 router.get(
   '/admin/users',
   authenticated,

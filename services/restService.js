@@ -56,6 +56,44 @@ const restService = {
         });
       });
     });
+  },
+
+  getRestaurant: (req, res, callback) => {
+    return Restaurant.findByPk(req.params.id, {
+      include: [
+        Category,
+        { model: User, as: 'FavoritedUsers' },
+        { model: User, as: 'LikedUsers' },
+        { model: Comment, include: [User] }
+      ]
+    }).then(restaurant => {
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(
+        req.user.id
+      );
+      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(
+        req.user.id
+      );
+      restaurant.update({
+        viewCounts: restaurant.viewCounts ? restaurant.viewCounts + 1 : 1
+      });
+      callback({ restaurant, isFavorited, isLiked });
+    });
+  },
+
+  getFeeds: (req, res, callback) => {
+    return Restaurant.findAll({
+      limit: 10,
+      order: [['createdAt', 'DESC']],
+      include: [Category]
+    }).then(restaurants => {
+      Comment.findAll({
+        limit: 10,
+        order: [['createdAt', 'DESC']],
+        include: [User, Restaurant]
+      }).then(comments => {
+        callback({ restaurants, comments });
+      });
+    });
   }
 };
 
