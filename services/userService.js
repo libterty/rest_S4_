@@ -165,6 +165,7 @@ const userService = {
   },
 
   addFavorite: async (req, res, callback) => {
+    // prevent injection attack
     const isFavorited = await Favorite.findAll({
       where: {
         UserId: req.user.id,
@@ -173,8 +174,6 @@ const userService = {
     }).then(favorite => {
       return favorite;
     });
-
-    console.log('isFav', isFavorited.length);
 
     if (isFavorited.length !== 0) {
       return callback({ status: 'error', message: 'Bad Request' });
@@ -213,6 +212,7 @@ const userService = {
   },
 
   removeFavorite: async (req, res, callback) => {
+    // prevent injection attack
     const isRemoved = await Favorite.findAll({
       where: {
         UserId: req.user.id,
@@ -262,6 +262,7 @@ const userService = {
   },
 
   addLike: async (req, res, callback) => {
+    // prevent injection attack
     const isLiked = await Like.findAll({
       where: {
         UserId: req.user.id,
@@ -294,6 +295,7 @@ const userService = {
   },
 
   removeLike: async (req, res, callback) => {
+    // prevent injection attack
     const isRemoved = await Like.findAll({
       where: {
         UserId: req.user.id,
@@ -331,6 +333,7 @@ const userService = {
   },
 
   addFollowing: async (req, res, callback) => {
+    // prevent injection attack
     const isFollowed = await Followship.findAll({
       where: {
         followerId: req.user.id,
@@ -363,6 +366,7 @@ const userService = {
   },
 
   removeFollowing: async (req, res, callback) => {
+    // prevent injection attack
     const isRemoved = await Followship.findAll({
       where: {
         followerId: req.user.id,
