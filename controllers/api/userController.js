@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../../models');
 const userService = require('../../services/userService');
+const BlackList = require('../../redis');
+const blackList = new BlackList();
 const User = db.User;
 
 let userController = {
@@ -67,6 +69,15 @@ let userController = {
         }
       });
     }
+  },
+
+  logout: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.json({ status: 'error', message: '錯誤請求！' });
+    }
+    const token = req.headers.authorization.replace(/Bearer /gi, '');
+    blackList.addList(token);
+    res.json({ status: 'success', message: '成功登出帳號！' });
   },
 
   getUser: (req, res) => {

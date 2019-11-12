@@ -14,7 +14,7 @@ const blackList = new BlackList();
 
 const authenticatedUser = (req, res, next) => {
   if (req.user) {
-    blackList.client.lrange('test1', 0, -1, (err, data) => {
+    blackList.client.lrange('blacklist', 0, -1, (err, data) => {
       const token = req.headers.authorization.replace(/Bearer /gi, '');
       if (data.indexOf(token) !== -1) {
         return res.json({ status: 'error', message: 'permission denied' });
@@ -33,7 +33,7 @@ const authenticatedUser = (req, res, next) => {
 const authenticatedAdmin = (req, res, next) => {
   console.log('req.cookies', req.headers.authorization);
   if (req.user) {
-    blackList.client.lrange('test1', 0, -1, (err, data) => {
+    blackList.client.lrange('blacklist', 0, -1, (err, data) => {
       const token = req.headers.authorization.replace(/Bearer /gi, '');
       if (data.indexOf(token) !== -1) {
         return res.json({ status: 'error', message: 'permission denied' });
@@ -55,6 +55,7 @@ router.get(
   authenticatedAdmin,
   commentController.getComments
 );
+router.get('/logout', authenticated, userController.logout);
 router.get('/restaurants', authenticated, restController.getRestaurants);
 router.get('/restaurants/feeds', authenticated, restController.getFeeds);
 router.get('/restaurants/top', authenticated, restController.getTopRestaurant);

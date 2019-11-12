@@ -49,7 +49,7 @@ const userController = {
   },
 
   logout: async (req, res) => {
-    const token = req.rawHeaders[1].replace(/Bearer /gi, '');
+    const token = req.headers.authorization.replace(/Bearer /gi, '');
     req.flash('success_messages', '登出成功！');
     req.logout();
     blackList.addList(token);
