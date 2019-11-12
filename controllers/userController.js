@@ -122,37 +122,32 @@ const userController = {
   },
 
   removeLike: (req, res) => {
-    return Like.findOne({
-      where: {
-        UserId: req.user.id,
-        RestaurantId: req.params.restaurantId
+    userService.removeLike(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
       }
-    }).then(like => {
-      like.destroy().then(() => {
-        return res.redirect('back');
-      });
+      req.flash('success_messages', data['message']);
+      res.redirect('back');
     });
   },
 
   addFollowing: (req, res) => {
-    return Followship.create({
-      followerId: req.user.id,
-      followingId: req.params.userId
-    }).then(() => {
-      return res.redirect('back');
+    userService.addFollowing(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
+      }
+      req.flash('success_messages', data['message']);
+      res.redirect('back');
     });
   },
 
   removeFollowing: (req, res) => {
-    return Followship.findOne({
-      where: {
-        followerId: req.user.id,
-        followingId: req.params.userId
+    userService.removeFollowing(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
       }
-    }).then(followship => {
-      followship.destroy().then(() => {
-        return res.redirect('back');
-      });
+      req.flash('success_messages', data['message']);
+      res.redirect('back');
     });
   }
 };

@@ -291,6 +291,112 @@ const userService = {
           });
         });
     }
+  },
+
+  removeLike: async (req, res, callback) => {
+    const isRemoved = await Like.findAll({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
+    }).then(remove => {
+      return remove;
+    });
+
+    if (isRemoved.length === 0) {
+      return callback({ status: 'error', message: 'Bad Request' });
+    } else {
+      return Like.findOne({
+        where: {
+          UserId: req.user.id,
+          RestaurantId: req.params.restaurantId
+        }
+      }).then(like => {
+        like
+          .destroy()
+          .then(() => {
+            callback({
+              status: 'success',
+              message: 'Removing from your like lists'
+            });
+          })
+          .catch(err => {
+            callback({
+              status: 'error',
+              message: err.message
+            });
+          });
+      });
+    }
+  },
+
+  addFollowing: async (req, res, callback) => {
+    const isFollowed = await Followship.findAll({
+      where: {
+        followerId: req.user.id,
+        followingId: req.params.userId
+      }
+    }).then(follow => {
+      return follow;
+    });
+
+    if (isFollowed.length !== 0) {
+      return callback({ status: 'error', message: 'Bad Request' });
+    } else {
+      return Followship.create({
+        followerId: req.user.id,
+        followingId: req.params.userId
+      })
+        .then(() => {
+          callback({
+            status: 'success',
+            message: 'Adding to your follow lists'
+          });
+        })
+        .catch(err => {
+          callback({
+            status: 'error',
+            message: err.message
+          });
+        });
+    }
+  },
+
+  removeFollowing: async (req, res, callback) => {
+    const isRemoved = await Followship.findAll({
+      where: {
+        followerId: req.user.id,
+        followingId: req.params.userId
+      }
+    }).then(follow => {
+      return follow;
+    });
+
+    if (isRemoved.length === 0) {
+      return callback({ status: 'error', message: 'Bad Request' });
+    } else {
+      return Followship.findOne({
+        where: {
+          followerId: req.user.id,
+          followingId: req.params.userId
+        }
+      }).then(followship => {
+        followship
+          .destroy()
+          .then(() => {
+            callback({
+              status: 'success',
+              message: 'Removing from your follow lists'
+            });
+          })
+          .catch(err => {
+            callback({
+              status: 'error',
+              message: err.message
+            });
+          });
+      });
+    }
   }
 };
 

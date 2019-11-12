@@ -112,6 +112,7 @@ router.post(
   userController.addFavorite
 );
 router.post('/like/:restaurantId', authenticated, userController.addLike);
+router.post('/following/:userId', authenticated, userController.addFollowing);
 router.post(
   '/admin/restaurants',
   upload.single('image'),
@@ -170,6 +171,12 @@ router.delete(
   '/favorite/:restaurantId',
   authenticated,
   userController.removeFavorite
+);
+router.delete('/like/:restaurantId', authenticated, userController.removeLike);
+router.delete(
+  '/following/:userId',
+  authenticated,
+  userController.removeFollowing
 );
 
 module.exports = router;
