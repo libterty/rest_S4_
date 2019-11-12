@@ -234,19 +234,21 @@ const userService = {
         favorite
           .destroy()
           .then(() => {
-            Restaurant.findByPk(req.params.restaurantId).then(restaurant =>
-              restaurant.update({
-                favCounts: restaurant.favCounts ? restaurant.favCounts - 1 : 0
-              })
-            );
+            Restaurant.findByPk(req.params.restaurantId)
+              .then(restaurant =>
+                restaurant.update({
+                  favCounts: restaurant.favCounts ? restaurant.favCounts - 1 : 0
+                })
+              )
+              .catch(err => {
+                callback({
+                  status: 'error',
+                  message: err.message
+                });
+              });
             callback({
               status: 'success',
               message: 'Removing from your favorite lists'
-            }).catch(err => {
-              callback({
-                status: 'error',
-                message: err.message
-              });
             });
           })
           .catch(err => {
@@ -256,6 +258,38 @@ const userService = {
             });
           });
       });
+    }
+  },
+
+  addLike: async (req, res, callback) => {
+    const isLiked = await Like.findAll({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
+    }).then(like => {
+      return like;
+    });
+
+    if (isLiked.length !== 0) {
+      return callback({ status: 'error', message: 'Bad Request' });
+    } else {
+      return Like.create({
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      })
+        .then(() => {
+          callback({
+            status: 'success',
+            message: 'Adding to your like lists'
+          });
+        })
+        .catch(err => {
+          callback({
+            status: 'error',
+            message: err.message
+          });
+        });
     }
   }
 };

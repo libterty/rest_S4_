@@ -111,6 +111,7 @@ router.post(
   authenticated,
   userController.addFavorite
 );
+router.post('/like/:restaurantId', authenticated, userController.addLike);
 router.post(
   '/admin/restaurants',
   upload.single('image'),

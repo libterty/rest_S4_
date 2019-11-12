@@ -112,11 +112,12 @@ const userController = {
   },
 
   addLike: (req, res) => {
-    return Like.create({
-      UserId: req.user.id,
-      RestaurantId: req.params.restaurantId
-    }).then(() => {
-      return res.redirect('back');
+    userService.addLike(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
+      }
+      req.flash('success_messages', data['message']);
+      res.redirect('back');
     });
   },
 
