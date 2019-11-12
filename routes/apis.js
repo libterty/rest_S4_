@@ -9,24 +9,41 @@ const userController = require('../controllers/api/userController.js');
 const commentController = require('../controllers/api/commentController');
 const restController = require('../controllers/api/restController');
 const authenticated = passport.authenticate('jwt', { session: false });
+const BlackList = require('../redis');
+const blackList = new BlackList();
 
 const authenticatedUser = (req, res, next) => {
   if (req.user) {
-    if (req.user.id == req.params.id) {
-      return next();
-    }
-    return res.json({ status: 'error', message: 'permission denied' });
+    blackList.client.lrange('test1', 0, -1, (err, data) => {
+      const token = req.headers.authorization.replace(/Bearer /gi, '');
+      if (data.indexOf(token) !== -1) {
+        return res.json({ status: 'error', message: 'permission denied' });
+      } else {
+        if (req.user.id == req.params.id) {
+          return next();
+        }
+        return res.json({ status: 'error', message: 'permission denied' });
+      }
+    });
   } else {
     return res.json({ status: 'error', message: 'permission denied' });
   }
 };
 
 const authenticatedAdmin = (req, res, next) => {
+  console.log('req.cookies', req.headers.authorization);
   if (req.user) {
-    if (req.user.isAdmin) {
-      return next();
-    }
-    return res.json({ status: 'error', message: 'permission denied' });
+    blackList.client.lrange('test1', 0, -1, (err, data) => {
+      const token = req.headers.authorization.replace(/Bearer /gi, '');
+      if (data.indexOf(token) !== -1) {
+        return res.json({ status: 'error', message: 'permission denied' });
+      } else {
+        if (req.user.isAdmin) {
+          return next();
+        }
+        return res.json({ status: 'error', message: 'permission denied' });
+      }
+    });
   } else {
     return res.json({ status: 'error', message: 'permission denied' });
   }

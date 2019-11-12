@@ -11,11 +11,8 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-// setup passport strategy
 passport.use(
   new LocalStrategy(
-    // customize user field
-    // get req from setting passReq Boolean
     {
       usernameField: 'email',
       passwordField: 'password',

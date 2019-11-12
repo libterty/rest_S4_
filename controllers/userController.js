@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs');
 const db = require('../models');
 const userService = require('../services/userService');
+const BlackList = require('../redis');
+const blackList = new BlackList();
 const User = db.User;
 
 const userController = {
@@ -46,9 +48,12 @@ const userController = {
     }
   },
 
-  logout: (req, res) => {
+  logout: async (req, res) => {
+    const token = req.rawHeaders[1].replace(/Bearer /gi, '');
     req.flash('success_messages', '登出成功！');
     req.logout();
+    blackList.addList(token);
+    // blackList.debug();
     res.redirect('/signin');
   },
 
