@@ -94,6 +94,24 @@ const restService = {
         callback({ restaurants, comments });
       });
     });
+  },
+
+  getDashboard: (req, res, callback) => {
+    return Restaurant.findByPk(req.params.id).then(restaurant => {
+      if (req.params.id) {
+        Comment.findAll().then(comments => {
+          let restComment = [];
+          comments.map(c => {
+            if (c.dataValues.RestaurantId === Number(req.params.id)) {
+              restComment.push(c.dataValues);
+            }
+          });
+          Category.findByPk(restaurant.CategoryId).then(cat => {
+            callback({ restaurant, restComment, cat });
+          });
+        });
+      }
+    });
   }
 };
 
