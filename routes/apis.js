@@ -7,6 +7,7 @@ const adminController = require('../controllers/api/adminController.js');
 const categoryController = require('../controllers/api/categoryController.js');
 const userController = require('../controllers/api/userController.js');
 const commentController = require('../controllers/api/commentController');
+const restController = require('../controllers/api/restController');
 const authenticated = passport.authenticate('jwt', { session: false });
 
 const authenticatedAdmin = (req, res, next) => {
@@ -26,6 +27,7 @@ router.get(
   authenticatedAdmin,
   commentController.getComments
 );
+router.get('/restaurants', authenticated, restController.getRestaurants);
 router.get(
   '/admin/users',
   authenticated,
