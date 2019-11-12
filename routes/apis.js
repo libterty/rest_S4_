@@ -107,6 +107,11 @@ router.post('/signin', userController.signIn);
 router.post('/signup', userController.signUp);
 router.post('/comments', authenticated, commentController.postComment);
 router.post(
+  '/favorite/:restaurantId',
+  authenticated,
+  userController.addFavorite
+);
+router.post(
   '/admin/restaurants',
   upload.single('image'),
   authenticated,

@@ -92,19 +92,12 @@ const userController = {
   },
 
   addFavorite: (req, res) => {
-    return Favorite.create({
-      UserId: req.user.id,
-      RestaurantId: req.params.restaurantId
-    }).then(() => {
-      Restaurant.findByPk(req.params.restaurantId).then(restaurant => {
-        restaurant
-          .update({
-            favCounts: restaurant.favCounts ? restaurant.favCounts + 1 : 1
-          })
-          .then(() => {
-            return res.redirect('back');
-          });
-      });
+    userService.addFavorite(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
+      }
+      req.flash('success_messages', data['message']);
+      res.redirect('back');
     });
   },
 

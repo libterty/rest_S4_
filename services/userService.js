@@ -162,6 +162,32 @@ const userService = {
           });
       });
     }
+  },
+
+  addFavorite: (req, res, callback) => {
+    return Favorite.create({
+      UserId: req.user.id,
+      RestaurantId: req.params.restaurantId
+    }).then(() => {
+      Restaurant.findByPk(req.params.restaurantId).then(restaurant => {
+        restaurant
+          .update({
+            favCounts: restaurant.favCounts ? restaurant.favCounts + 1 : 1
+          })
+          .then(() => {
+            callback({
+              status: 'success',
+              message: 'Adding to your favorite lists'
+            });
+          })
+          .catch(err => {
+            callback({
+              status: 'error',
+              message: err.message
+            });
+          });
+      });
+    });
   }
 };
 
