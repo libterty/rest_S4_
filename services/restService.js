@@ -112,6 +112,29 @@ const restService = {
         });
       }
     });
+  },
+
+  getTopRestaurant: (req, res, callback) => {
+    return Favorite.findAll().then(favorite => {
+      favorite = favorite.map(fav => ({
+        ...fav.dataValues
+      }));
+      const id = favorite.map(c => c.RestaurantId);
+      Restaurant.findAll({
+        where: {
+          id: {
+            [Op.in]: id
+          }
+        }
+      }).then(restlists => {
+        const restaurant = restlists
+          .map(rest => ({ ...rest.dataValues }))
+          .sort((a, b) => b.favCounts - a.favCounts)
+          .slice(0, 10);
+
+        callback({ restaurant });
+      });
+    });
   }
 };
 
