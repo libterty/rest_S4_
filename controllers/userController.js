@@ -102,20 +102,12 @@ const userController = {
   },
 
   removeFavorite: (req, res) => {
-    return Favorite.findOne({
-      where: {
-        UserId: req.user.id,
-        RestaurantId: req.params.restaurantId
+    userService.removeFavorite(req, res, data => {
+      if (data['status'] === 'error') {
+        req.flash('error_messages', data['message']);
       }
-    }).then(favorite => {
-      favorite.destroy().then(() => {
-        Restaurant.findByPk(req.params.restaurantId).then(restaurant =>
-          restaurant.update({
-            favCounts: restaurant.favCounts ? restaurant.favCounts - 1 : 0
-          })
-        );
-        return res.redirect('back');
-      });
+      req.flash('success_messages', data['message']);
+      res.redirect('back');
     });
   },
 

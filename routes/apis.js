@@ -165,5 +165,10 @@ router.delete(
   categoryController.deleteCategory
 );
 router.delete('/comments/:id', authenticated, commentController.deleteComment);
+router.delete(
+  '/favorite/:restaurantId',
+  authenticated,
+  userController.removeFavorite
+);
 
 module.exports = router;

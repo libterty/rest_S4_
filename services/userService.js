@@ -164,20 +164,89 @@ const userService = {
     }
   },
 
-  addFavorite: (req, res, callback) => {
-    return Favorite.create({
-      UserId: req.user.id,
-      RestaurantId: req.params.restaurantId
-    }).then(() => {
-      Restaurant.findByPk(req.params.restaurantId).then(restaurant => {
-        restaurant
-          .update({
-            favCounts: restaurant.favCounts ? restaurant.favCounts + 1 : 1
+  addFavorite: async (req, res, callback) => {
+    const isFavorited = await Favorite.findAll({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
+    }).then(favorite => {
+      return favorite;
+    });
+
+    console.log('isFav', isFavorited.length);
+
+    if (isFavorited.length !== 0) {
+      return callback({ status: 'error', message: 'Bad Request' });
+    } else {
+      return Favorite.create({
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }).then(() => {
+        Restaurant.findByPk(req.params.restaurantId)
+          .then(restaurant => {
+            restaurant
+              .update({
+                favCounts: restaurant.favCounts ? restaurant.favCounts + 1 : 1
+              })
+              .then(() => {
+                callback({
+                  status: 'success',
+                  message: 'Adding to your favorite lists'
+                });
+              })
+              .catch(err => {
+                callback({
+                  status: 'error',
+                  message: err.message
+                });
+              });
           })
+          .catch(err => {
+            callback({
+              status: 'error',
+              message: err.message
+            });
+          });
+      });
+    }
+  },
+
+  removeFavorite: async (req, res, callback) => {
+    const isRemoved = await Favorite.findAll({
+      where: {
+        UserId: req.user.id,
+        RestaurantId: req.params.restaurantId
+      }
+    }).then(remove => {
+      return remove;
+    });
+
+    if (isRemoved.length === 0) {
+      return callback({ status: 'error', message: 'Bad Request' });
+    } else {
+      return Favorite.findOne({
+        where: {
+          UserId: req.user.id,
+          RestaurantId: req.params.restaurantId
+        }
+      }).then(favorite => {
+        favorite
+          .destroy()
           .then(() => {
+            Restaurant.findByPk(req.params.restaurantId).then(restaurant =>
+              restaurant.update({
+                favCounts: restaurant.favCounts ? restaurant.favCounts - 1 : 0
+              })
+            );
             callback({
               status: 'success',
-              message: 'Adding to your favorite lists'
+              message: 'Removing from your favorite lists'
+            }).catch(err => {
+              callback({
+                status: 'error',
+                message: err.message
+              });
             });
           })
           .catch(err => {
@@ -187,7 +256,7 @@ const userService = {
             });
           });
       });
-    });
+    }
   }
 };
 
