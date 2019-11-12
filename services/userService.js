@@ -101,6 +101,67 @@ const userService = {
       users = users.sort((a, b) => b.FollowerCount - a.FollowerCount);
       callback({ users });
     });
+  },
+
+  editUser: (req, res, callback) => {
+    return User.findByPk(req.params.id).then(user => {
+      callback({ user });
+    });
+  },
+
+  putUser: (req, res, callback) => {
+    if (!req.body.name) {
+      return callback({ status: 'error', message: "name didn't exist" });
+    }
+
+    const { file } = req;
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID);
+      imgur.upload(file.path, (err, img) => {
+        if (err) console.log('Upload Img Error: ', err.message);
+        return User.findByPk(req.params.id).then(user => {
+          user
+            .update({
+              name: req.body.name,
+              image: file ? img.data.link : user.image
+            })
+            .then(user => {
+              callback({
+                status: 'success',
+                message: `${user.name} was successfully update to date`,
+                user: user.id
+              });
+            })
+            .catch(err => {
+              callback({
+                status: 'error',
+                message: err.message
+              });
+            });
+        });
+      });
+    } else {
+      return User.findByPk(req.params.id).then(user => {
+        user
+          .update({
+            name: req.body.name,
+            image: user.image
+          })
+          .then(user => {
+            callback({
+              status: 'success',
+              message: `${user.name} was successfully update to date`,
+              user: user.id
+            });
+          })
+          .catch(err => {
+            callback({
+              status: 'error',
+              message: err.message
+            });
+          });
+      });
+    }
   }
 };
 

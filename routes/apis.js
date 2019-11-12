@@ -55,6 +55,12 @@ router.get(
   userController.getUser
 );
 router.get(
+  '/users/:id/edit',
+  authenticated,
+  authenticatedUser,
+  userController.editUser
+);
+router.get(
   '/admin/users',
   authenticated,
   authenticatedAdmin,
@@ -132,6 +138,13 @@ router.put(
   authenticated,
   authenticatedAdmin,
   categoryController.putCategory
+);
+router.put(
+  '/users/:id',
+  authenticated,
+  authenticatedUser,
+  upload.single('image'),
+  userController.putUser
 );
 
 router.delete(
