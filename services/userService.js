@@ -185,9 +185,7 @@ const userService = {
         Restaurant.findByPk(req.params.restaurantId)
           .then(restaurant => {
             restaurant
-              .update({
-                favCounts: restaurant.favCounts ? restaurant.favCounts + 1 : 1
-              })
+              .increment('favCounts')
               .then(() => {
                 callback({
                   status: 'success',
@@ -236,9 +234,20 @@ const userService = {
           .then(() => {
             Restaurant.findByPk(req.params.restaurantId)
               .then(restaurant =>
-                restaurant.update({
-                  favCounts: restaurant.favCounts ? restaurant.favCounts - 1 : 0
-                })
+                restaurant
+                  .decrement('favCounts')
+                  .then(() => {
+                    callback({
+                      status: 'success',
+                      message: 'Removing from your favorite lists'
+                    });
+                  })
+                  .catch(err => {
+                    callback({
+                      status: 'error',
+                      message: err.message
+                    });
+                  })
               )
               .catch(err => {
                 callback({
@@ -246,10 +255,6 @@ const userService = {
                   message: err.message
                 });
               });
-            callback({
-              status: 'success',
-              message: 'Removing from your favorite lists'
-            });
           })
           .catch(err => {
             callback({

@@ -128,7 +128,12 @@ const restService = {
         }
       }).then(restlists => {
         const restaurant = restlists
-          .map(rest => ({ ...rest.dataValues }))
+          .map(rest => ({
+            ...rest.dataValues,
+            isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(
+              rest.id
+            )
+          }))
           .sort((a, b) => b.favCounts - a.favCounts)
           .slice(0, 10);
 
