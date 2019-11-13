@@ -122,27 +122,16 @@ const restController = {
   },
 
   getTopRestaurant: (req, res) => {
-    return Favorite.findAll().then(favorite => {
-      favorite = favorite.map(fav => ({
-        ...fav.dataValues
-      }));
-      const id = favorite.map(c => c.RestaurantId);
-      Restaurant.findAll({
-        where: {
-          id: {
-            [Op.in]: id
-          }
-        }
-      }).then(restlists => {
-        const restaurant = restlists
-          .map(rest => ({ ...rest.dataValues }))
-          .sort((a, b) => b.favCounts - a.favCounts)
-          .slice(0, 10);
-        // const restaurant = restlists
-        //   .sort((a, b) => b.favCounts - a.favCounts)
-        //   .slice(0, 10);
-        return res.render('topRestaurant', { restaurant });
-      });
+    Restaurant.findAll({
+      include: [{ model: User, as: 'FavoritedUsers' }]
+    }).then(rests => {
+      const restaurant = rests
+        .map(rest => ({
+          ...rest.dataValues
+        }))
+        .sort((a, b) => b.favCounts - a.favCounts)
+        .slice(0, 10);
+      return res.render('topRestaurant', { restaurant });
     });
   }
 };
