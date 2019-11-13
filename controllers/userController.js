@@ -208,13 +208,9 @@ const userController = {
       RestaurantId: req.params.restaurantId
     }).then(() => {
       Restaurant.findByPk(req.params.restaurantId).then(restaurant => {
-        restaurant
-          .update({
-            favCounts: restaurant.favCounts ? restaurant.favCounts + 1 : 1
-          })
-          .then(() => {
-            return res.redirect('back');
-          });
+        restaurant.increment('favCounts').then(() => {
+          return res.redirect('back');
+        });
       });
     });
   },
@@ -228,11 +224,10 @@ const userController = {
     }).then(favorite => {
       favorite.destroy().then(() => {
         Restaurant.findByPk(req.params.restaurantId).then(restaurant =>
-          restaurant.update({
-            favCounts: restaurant.favCounts ? restaurant.favCounts - 1 : 0
+          restaurant.decrement('favCounts').then(() => {
+            return res.redirect('back');
           })
         );
-        return res.redirect('back');
       });
     });
   },
