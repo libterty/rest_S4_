@@ -7,13 +7,17 @@ const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const Handlebars = require('handlebars');
 const H = require('just-handlebars-helpers');
-// const db = require('./models');
+const BlackList = require('./redis');
 const app = express();
 const port = process.env.PORT || 3000;
+const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+const blackList = new BlackList(REDIS_URL);
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+
+blackList.connect();
 
 // 設定 view engine 使用 handlebars
 app.engine(
@@ -27,6 +31,7 @@ app.set('view engine', 'handlebars');
 
 app.use('/upload', express.static(__dirname + '/upload'));
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -41,10 +46,9 @@ app.use(methodOverride('_method'));
 H.registerHelpers(Handlebars);
 
 const server = app.listen(port, () => {
-  // db.sequelize.sync();
   console.log(`Example app listening on port http://localhost:${port}`);
 });
 
-require('./routes')(app, passport);
+require('./routes')(app);
 
 module.exports = server;

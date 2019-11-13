@@ -33,9 +33,11 @@
                     </ul>
                     <div class="row align-items-start" style="padding-top: 0.25rem; padding-left: 1rem;">
                         <a class="btn btn-primary" href="/restaurants/{{this.id}}" role="button">Show</a>
-                        <form action="/favorite/{{this.id}}?_method=DELETE" method="POST">
-                            <button type="submit" class="btn btn-danger">移除最愛</button>
-                        </form>
+                        {{#if isFavorited }}
+                            <form action="/favorite/{{this.id}}?_method=DELETE" method="POST">
+                                <button type="submit" class="btn btn-danger">移除最愛</button>
+                            </form>
+                        {{/if}}
                     </div>
                 </div>
             </div>
