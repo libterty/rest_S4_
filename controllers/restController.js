@@ -127,10 +127,16 @@ const restController = {
     }).then(rests => {
       const restaurant = rests
         .map(rest => ({
-          ...rest.dataValues
+          ...rest.dataValues,
+          isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(
+            rest.id
+          )
         }))
         .sort((a, b) => b.favCounts - a.favCounts)
         .slice(0, 10);
+
+      console.log('rest', restaurant);
+
       return res.render('topRestaurant', { restaurant });
     });
   }
