@@ -7,6 +7,7 @@ const flash = require('connect-flash');
 const methodOverride = require('method-override');
 const Handlebars = require('handlebars');
 const H = require('just-handlebars-helpers');
+const cors = require('cors');
 const BlackList = require('./redis');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -28,7 +29,7 @@ app.engine(
   })
 );
 app.set('view engine', 'handlebars');
-
+app.use(cors());
 app.use('/upload', express.static(__dirname + '/upload'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

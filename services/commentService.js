@@ -9,15 +9,18 @@ const commentService = {
   },
 
   postComment: (req, res, callback) => {
+    console.log('postman req', req);
+
     return Comment.create({
       text: req.body.text,
       RestaurantId: req.body.restaurantId,
       UserId: req.user.id
     })
-      .then(() => {
+      .then(comment => {
         callback({
           status: 'success',
-          message: 'Comment was successfully created'
+          message: 'Comment was successfully created',
+          RestaurantId: comment.RestaurantId
         });
       })
       .catch(err => {
